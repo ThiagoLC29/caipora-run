@@ -15,6 +15,10 @@ public class PlayerController : MonoBehaviour
     public float tapRange;
 
     public Transform leftSpot, middleSpot, rightSpot;
+    public float leftX = -2.5f;
+    public float middleX = 0f;
+    public float rightX = 2.5f;
+    public float moveSpeed = 100f;
 
     [Header("Other Stuff")]
     public int levelCount = 0;
@@ -28,14 +32,12 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Swipe();
+        WASD();
     }
 
 
     public void Swipe()
     {
-
-
-
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
             startTouchPosition = Input.GetTouch(0).position;
@@ -75,6 +77,30 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+
+    }
+
+    public void WASD()
+    {
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+
+        }
+
+        else if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && transform.position.x > leftX)
+        {
+            transform.position += new Vector3(-2.5f, 0f, 0f);
+        }
+
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+
+        }
+
+        else if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && transform.position.x < rightX)
+        {
+            transform.position += new Vector3 (2.5f, 0f, 0f); 
+        }
 
     }
 
