@@ -10,8 +10,6 @@ public class PlayerMovement : MonoBehaviour
     public float speedIncrease = 0.01f;
     public Vector3 direction = Vector3.forward;
 
-    public Transform leftSpot, middleSpot, rightSpot;
-
 
     void Start()
     {

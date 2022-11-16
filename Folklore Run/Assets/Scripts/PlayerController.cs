@@ -21,8 +21,11 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 100f;
 
     [Header("Other Stuff")]
+    public float slideTime = 1f;
+
     public int levelCount = 0;
     public GameObject[] levelsInstantiated;
+    bool isSliding = false;
 
 
     void Start()
@@ -33,6 +36,7 @@ public class PlayerController : MonoBehaviour
     {
         Swipe();
         WASD();
+        Slide();
     }
 
 
@@ -92,9 +96,11 @@ public class PlayerController : MonoBehaviour
             transform.position += new Vector3(-2.5f, 0f, 0f);
         }
 
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        else if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) && isSliding == false)
         {
-
+            isSliding = true;
+            Debug.Log("sliding");
+            Invoke("GetBackUp", slideTime);
         }
 
         else if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && transform.position.x < rightX)
@@ -114,6 +120,30 @@ public class PlayerController : MonoBehaviour
 
         }
 
+    }
+
+    public void GetBackUp()
+    {
+
+        isSliding = false;
+        Debug.Log("stood up");
+        
+    }
+
+    public void Slide()
+    {
+        if (isSliding)
+        {
+            transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
+            transform.position = new Vector3(transform.position.x, -0.75f, transform.position.z);
+
+        }
+        else
+        {
+            transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+            transform.position = new Vector3(transform.position.x, -0.25f, transform.position.z);
+
+        }
     }
 
 }
