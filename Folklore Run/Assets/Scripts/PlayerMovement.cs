@@ -1,6 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -9,16 +10,18 @@ public class PlayerMovement : MonoBehaviour
     public float maxSpeed = 100f;
     public float speedIncrease = 0.01f;
     public Vector3 direction = Vector3.forward;
+    public PlayerController controller;
 
 
     void Start()
     {
-
+        controller = FindObjectOfType<PlayerController>();
     }
 
     void Update()
     {
-        Move();
+        if (controller.isPaused == false)
+            Move();
     }
 
     public void Move()
@@ -30,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
             moveSpeed += speedIncrease;
         }
 
+        controller.score = (int)Math.Ceiling(controller.score + 1 * Time.deltaTime); //adds score rounding up
     }
 
 

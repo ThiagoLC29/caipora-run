@@ -21,6 +21,9 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 100f;
 
     [Header("Other Stuff")]
+    public int coins;
+    public int score;
+
     public float slideTime = 1f;
     public int levelCount = 0;
     public GameObject[] levelsInstantiated;
@@ -30,6 +33,9 @@ public class PlayerController : MonoBehaviour
     public float jumpHeight = 2f;
     public float jumpTime = 1f;
 
+    public bool isPaused = false;
+    public bool isAttacking = false;
+    public float attackTime = 0.5f;
 
     void Start()
     {
@@ -90,31 +96,43 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void WASD()
+    public void WASD() // playing on pc, for debugging
     {
-        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && isJumping == false)
+        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && isJumping == false && isPaused == false)
         {
+            StartCoroutine(Attack());
+
             isJumping = true;
             Invoke("BaseState", jumpTime);
         }
 
-        else if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && transform.position.x > leftX)
+        else if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && transform.position.x > leftX && isPaused == false)
         {
+            StartCoroutine(Attack());
+
             transform.position += new Vector3(-2.5f, 0f, 0f);
         }
 
-        else if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) && isSliding == false)
+        else if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) && isSliding == false && isPaused == false)
         {
+            StartCoroutine(Attack());
+
             isSliding = true;
             Debug.Log("sliding");
             Invoke("BaseState", slideTime);
         }
 
-        else if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && transform.position.x < rightX)
+        else if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && transform.position.x < rightX && isPaused == false)
         {
+            StartCoroutine(Attack());
+
             transform.position += new Vector3 (2.5f, 0f, 0f); 
         }
 
+
+        /***************** Other Controls *****************/
+        if (Input.GetKeyDown(KeyCode.P))
+            Pause();
     }
 
     public void HandleLevel()
@@ -159,6 +177,30 @@ public class PlayerController : MonoBehaviour
             transform.position = new Vector3 (transform.position.x, jumpHeight, transform.position.z);
         else if (isSliding == false && isJumping == false)
             transform.position = new Vector3 (transform.position.x, -0.25f, transform.position.z);
+    }
+
+    public void Pause()
+    {
+        if (isPaused == false)
+        {
+            Time.timeScale = 0f;
+            isPaused = true;
+        }
+        else if (isPaused)
+        {
+            Time.timeScale = 1f;
+            moveSpeed = moveSpeed / 2;
+            isPaused = false;
+        }
+    }
+
+    IEnumerator Attack()
+    {
+        isAttacking = true;
+
+        yield return new WaitForSeconds(attackTime);
+
+        isAttacking = false;
     }
 
 }
