@@ -22,21 +22,27 @@ public class PlayerController : MonoBehaviour
 
     [Header("Other Stuff")]
     public float slideTime = 1f;
-
     public int levelCount = 0;
     public GameObject[] levelsInstantiated;
-    bool isSliding = false;
+    public bool isSliding = false;
+
+    public bool isJumping = false;
+    public float jumpHeight = 2f;
+    public float jumpTime = 1f;
 
 
     void Start()
     {
-        
+
     }
     void Update()
     {
+
         Swipe();
         WASD();
         Slide();
+        Jump();
+
     }
 
 
@@ -86,9 +92,10 @@ public class PlayerController : MonoBehaviour
 
     public void WASD()
     {
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && isJumping == false)
         {
-
+            isJumping = true;
+            Invoke("BaseState", jumpTime);
         }
 
         else if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && transform.position.x > leftX)
@@ -100,7 +107,7 @@ public class PlayerController : MonoBehaviour
         {
             isSliding = true;
             Debug.Log("sliding");
-            Invoke("GetBackUp", slideTime);
+            Invoke("BaseState", slideTime);
         }
 
         else if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && transform.position.x < rightX)
@@ -122,9 +129,9 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void GetBackUp()
+    public void BaseState()
     {
-
+        isJumping = false;
         isSliding = false;
         Debug.Log("stood up");
         
@@ -138,12 +145,20 @@ public class PlayerController : MonoBehaviour
             transform.position = new Vector3(transform.position.x, -0.75f, transform.position.z);
 
         }
-        else
+        else if (isSliding == false && isJumping == false)
         {
             transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
             transform.position = new Vector3(transform.position.x, -0.25f, transform.position.z);
 
         }
+    }
+
+    public void Jump()
+    {
+        if (isJumping)
+            transform.position = new Vector3 (transform.position.x, jumpHeight, transform.position.z);
+        else if (isSliding == false && isJumping == false)
+            transform.position = new Vector3 (transform.position.x, -0.25f, transform.position.z);
     }
 
 }
