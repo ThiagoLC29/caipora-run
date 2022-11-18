@@ -169,11 +169,12 @@ public class PlayerController : MonoBehaviour
     {
         if (isSliding)
         {
+            isJumping = false;
             transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
             transform.position = new Vector3(transform.position.x, -0.75f, transform.position.z);
 
         }
-        else if (isSliding == false && isJumping == false)
+        else if (isSliding == false /*&& isJumping == false*/)
         {
             transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
             transform.position = new Vector3(transform.position.x, -0.25f, transform.position.z);
@@ -184,7 +185,11 @@ public class PlayerController : MonoBehaviour
     public void Jump()
     {
         if (isJumping)
+        {
+            isSliding = false;
             transform.position = new Vector3(transform.position.x, jumpHeight, transform.position.z);
+
+        }
         else if (isSliding == false && isJumping == false)
             transform.position = new Vector3(transform.position.x, -0.25f, transform.position.z);
     }

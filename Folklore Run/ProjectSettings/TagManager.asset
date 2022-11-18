@@ -9,6 +9,7 @@ TagManager:
   - Ground
   - Boitata
   - Spawner
+  - Collectable
   layers:
   - Default
   - TransparentFX

@@ -18,7 +18,7 @@ public class Cleaner : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag != "Ground" && other.tag != "Spawner")
+        if (other.tag != "Ground" && other.tag != "Spawner" && other.tag != "Collectable")
             Destroy(other.gameObject);
     }
 
