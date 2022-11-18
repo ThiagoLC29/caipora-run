@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Parameters")]
+
     public float moveSpeed = 3f;
     public float maxSpeed = 100f;
     public float speedIncrease = 0.01f;

@@ -6,6 +6,9 @@ TagManager:
   tags:
   - GroundSpawn
   - Level
+  - Ground
+  - Boitata
+  - Spawner
   layers:
   - Default
   - TransparentFX

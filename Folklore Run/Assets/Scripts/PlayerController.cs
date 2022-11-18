@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
     public float leftX = -2.5f;
     public float middleX = 0f;
     public float rightX = 2.5f;
-    public float moveSpeed = 100f;
 
     [Header("Other Stuff")]
     public int coins;
@@ -37,9 +36,17 @@ public class PlayerController : MonoBehaviour
     public bool isAttacking = false;
     public float attackTime = 0.5f;
 
-    void Start()
-    {
+    public GameObject boitata;
+    public float boitataTimer;
+    public float boitataSpeed;
 
+    public PlayerMovement movement;
+
+    void Awake()
+    {
+        boitata = GameObject.FindGameObjectWithTag("Boitata");
+        boitata.SetActive(false);
+        movement = FindObjectOfType<PlayerMovement>();
     }
     void Update()
     {
@@ -126,13 +133,16 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(Attack());
 
-            transform.position += new Vector3 (2.5f, 0f, 0f); 
+            transform.position += new Vector3(2.5f, 0f, 0f);
         }
 
 
         /***************** Other Controls *****************/
         if (Input.GetKeyDown(KeyCode.P))
             Pause();
+
+        if (Input.GetKeyDown(KeyCode.B))
+            StartCoroutine(Boitata());
     }
 
     public void HandleLevel()
@@ -152,7 +162,7 @@ public class PlayerController : MonoBehaviour
         isJumping = false;
         isSliding = false;
         Debug.Log("stood up");
-        
+
     }
 
     public void Slide()
@@ -174,9 +184,9 @@ public class PlayerController : MonoBehaviour
     public void Jump()
     {
         if (isJumping)
-            transform.position = new Vector3 (transform.position.x, jumpHeight, transform.position.z);
+            transform.position = new Vector3(transform.position.x, jumpHeight, transform.position.z);
         else if (isSliding == false && isJumping == false)
-            transform.position = new Vector3 (transform.position.x, -0.25f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, -0.25f, transform.position.z);
     }
 
     public void Pause()
@@ -189,7 +199,7 @@ public class PlayerController : MonoBehaviour
         else if (isPaused)
         {
             Time.timeScale = 1f;
-            moveSpeed = moveSpeed / 2;
+            movement.moveSpeed = movement.moveSpeed / 2;
             isPaused = false;
         }
     }
@@ -201,6 +211,17 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(attackTime);
 
         isAttacking = false;
+    }
+
+    IEnumerator Boitata()
+    {
+        movement.moveSpeed = boitataSpeed;
+        boitata.SetActive(true);
+
+        yield return new WaitForSeconds(boitataTimer);
+
+        movement.moveSpeed = movement.maxSpeed / 2;
+        boitata.SetActive(false);
     }
 
 }
