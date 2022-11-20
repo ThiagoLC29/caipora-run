@@ -5,7 +5,7 @@ using System.Linq;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Checking Touch")]
+    [Header("--- Check Touch ---")]
     private Vector2 startTouchPosition;
     //private Vector2 currentTouchPosition;
     private Vector2 endTouchPosition;
@@ -14,18 +14,15 @@ public class PlayerController : MonoBehaviour
     public float swipeRange;
     public float tapRange;
 
+    [Header("--- Movement and Attack ---")]
+    public PlayerMovement movement;
+
     public Transform leftSpot, middleSpot, rightSpot;
     public float leftX = -2.5f;
     public float middleX = 0f;
     public float rightX = 2.5f;
 
-    [Header("Other Stuff")]
-    public int coins;
-    public int score;
-
     public float slideTime = 1f;
-    public int levelCount = 0;
-    public GameObject[] levelsInstantiated;
     public bool isSliding = false;
 
     public bool isJumping = false;
@@ -36,11 +33,32 @@ public class PlayerController : MonoBehaviour
     public bool isAttacking = false;
     public float attackTime = 0.5f;
 
+    [Header("--- Power Ups ---")]
+
     public GameObject boitata;
     public float boitataTimer;
     public float boitataSpeed;
 
-    public PlayerMovement movement;
+    public GameObject boto;
+    public float botoTimer;
+    public float botoSpeed;
+    public float botoJump;
+    public bool isWithBoto = false;
+
+    public GameObject javali;
+    public float javaliTimer;
+    public float javaliSpeed;
+    public float javaliJumpHeight;
+
+    [Header ("--- Other Stuff ---")]
+
+    public int coins;
+    public int score;
+
+    public int levelCount = 0;
+    public GameObject[] levelsInstantiated;
+
+    public GameObject cameraPivot;
 
     void Awake()
     {
@@ -109,18 +127,19 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(Attack());
 
-            isJumping = true;
-            Invoke("BaseState", jumpTime);
+            //isJumping = true;
+            //Invoke("BaseState", jumpTime);
+            StartCoroutine(Jumppp());
         }
 
-        else if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && transform.position.x > leftX && isPaused == false)
+        if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && transform.position.x > leftX && isPaused == false)
         {
             StartCoroutine(Attack());
 
             transform.position += new Vector3(-2.5f, 0f, 0f);
         }
 
-        else if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) && isSliding == false && isPaused == false)
+        if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) && isSliding == false && isPaused == false)
         {
             StartCoroutine(Attack());
 
@@ -129,7 +148,7 @@ public class PlayerController : MonoBehaviour
             Invoke("BaseState", slideTime);
         }
 
-        else if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && transform.position.x < rightX && isPaused == false)
+        if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && transform.position.x < rightX && isPaused == false)
         {
             StartCoroutine(Attack());
 
@@ -141,8 +160,14 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
             Pause();
 
-        if (Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.M))
             StartCoroutine(Boitata());
+
+        if (Input.GetKeyDown(KeyCode.B))
+            StartCoroutine(Boto());
+
+        if (Input.GetKeyDown(KeyCode.J))
+            StartCoroutine(Javali());
     }
 
     public void HandleLevel()
@@ -177,22 +202,45 @@ public class PlayerController : MonoBehaviour
         else if (isSliding == false /*&& isJumping == false*/)
         {
             transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
-            transform.position = new Vector3(transform.position.x, -0.25f, transform.position.z);
+            if (isWithBoto == false)
+                transform.position = new Vector3(transform.position.x, -0.25f, transform.position.z);
 
         }
     }
 
     public void Jump()
     {
-        if (isJumping)
+        if (isJumping && isWithBoto == false)
         {
             isSliding = false;
             transform.position = new Vector3(transform.position.x, jumpHeight, transform.position.z);
 
         }
-        else if (isSliding == false && isJumping == false)
+        else if (isSliding == false && isJumping == false && isWithBoto == false)
+        {
             transform.position = new Vector3(transform.position.x, -0.25f, transform.position.z);
+
+        }
+        if (isJumping && isWithBoto)
+        {
+            isSliding = false;
+            transform.position = new Vector3(transform.position.x, botoJump, transform.position.z);
+
+        }
+
     }
+
+    IEnumerator Jumppp()
+    {
+        isJumping = true;
+
+        yield return new WaitForSeconds(jumpTime);
+
+        isJumping = false;
+
+
+    }
+
 
     public void Pause()
     {
@@ -229,4 +277,29 @@ public class PlayerController : MonoBehaviour
         boitata.SetActive(false);
     }
 
+    IEnumerator Boto()
+    {
+        isWithBoto = true;
+        movement.transform.position = new Vector3(movement.transform.position.x, -12f, movement.transform.position.z);
+        cameraPivot.transform.position = new Vector3(cameraPivot.transform.position.x, cameraPivot.transform.position.y -3f, cameraPivot.transform.position.z);
+
+
+        yield return new WaitForSeconds(botoTimer);
+
+        isWithBoto = false;
+        movement.transform.position = new Vector3(movement.transform.position.x, 0f, movement.transform.position.z);
+        cameraPivot.transform.position = new Vector3(cameraPivot.transform.position.x, cameraPivot.transform.position.y, cameraPivot.transform.position.z);
+
+
+    }
+
+    IEnumerator Javali()
+    {
+        float temp = jumpHeight;
+        jumpHeight = javaliJumpHeight;
+
+        yield return new WaitForSeconds(javaliTimer);
+
+        jumpHeight = temp;
+    }
 }

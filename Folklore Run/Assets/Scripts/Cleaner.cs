@@ -4,17 +4,7 @@ using UnityEngine;
 
 public class Cleaner : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    // the name is cleaner because it was used for something else earlier on this project
 
     private void OnTriggerEnter(Collider other)
     {

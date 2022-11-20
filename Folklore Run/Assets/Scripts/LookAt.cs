@@ -10,13 +10,18 @@ public class LookAt : MonoBehaviour
     void Start()
     {
         target = Camera.main.transform;
+        //transform.rotation = target.rotation;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.LookAt(target);
+        //transform.LookAt(target);
 
-        transform.rotation = Quaternion.Euler(-transform.rotation.eulerAngles.x, -transform.rotation.eulerAngles.y, 0f);
+        //transform.rotation = Quaternion.Euler(-transform.rotation.eulerAngles.x, -transform.rotation.eulerAngles.y, -transform.rotation.eulerAngles.z);
+
+        transform.rotation = target.rotation; //better than LookAt() for this exact purpose
+
+
     }
 }
