@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
+
 
 public class PlayerController : MonoBehaviour
 {
@@ -50,6 +52,12 @@ public class PlayerController : MonoBehaviour
     public float javaliTimer;
     public float javaliSpeed;
     public float javaliJumpHeight;
+    public bool isWithJavali = false;
+
+    [Header("--- Animation ---")]
+    public Animator animator;
+
+
 
     [Header ("--- Other Stuff ---")]
 
@@ -87,33 +95,37 @@ public class PlayerController : MonoBehaviour
         {
             endTouchPosition = Input.GetTouch(0).position;
 
-            if (endTouchPosition.x > startTouchPosition.x && transform.position.x < rightSpot.position.x) // Right Swipe
+            if (endTouchPosition.x > startTouchPosition.x && transform.position.x < rightSpot.position.x && isPaused == false) // Right Swipe
             {
-                Debug.Log("Right");
-                if (transform.position.x == 0)
-                    transform.position = rightSpot.position;
-                else
-                    transform.position = middleSpot.position;
+                StartCoroutine(Attack());
+
+                transform.position += new Vector3(2.5f, 0f, 0f);
 
             }
 
-            if (endTouchPosition.x < startTouchPosition.x && transform.position.x > leftSpot.position.x) // Left Swipe
+            if (endTouchPosition.x < startTouchPosition.x && transform.position.x > leftSpot.position.x && isPaused == false) // Left Swipe
             {
-                Debug.Log("Left");
-                if (transform.position.x == 0)
-                    transform.position = leftSpot.position;
-                else
-                    transform.position = middleSpot.position;
+
+                StartCoroutine(Attack());
+
+                transform.position += new Vector3(-2.5f, 0f, 0f);
             }
 
-            if (endTouchPosition.y > startTouchPosition.y) // Up Swipe
+            if (endTouchPosition.y > startTouchPosition.y && isJumping == false && isPaused == false) // Up Swipe
             {
-                Debug.Log("Up");
+                StartCoroutine(Attack());
+
+                StartCoroutine(Jump());
             }
 
-            if (endTouchPosition.y < startTouchPosition.y) // Down Swipe
+            if (endTouchPosition.y < startTouchPosition.y && isSliding == false && isPaused == false) // Down Swipe
             {
-                Debug.Log("Down");
+                StartCoroutine(Attack());
+
+                Debug.Log("sliding");
+
+                if (isWithBoto == false)
+                    StartCoroutine(Slide());
             }
         }
 
@@ -155,7 +167,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        /***************** Other Controls *****************/
+        /***************** Other Controls / Cheats *****************/
         if (Input.GetKeyDown(KeyCode.P))
             Pause();
 
@@ -173,7 +185,7 @@ public class PlayerController : MonoBehaviour
     {
         levelCount = levelsInstantiated.Count();
         levelsInstantiated = GameObject.FindGameObjectsWithTag("Level");
-        if (levelCount >= 2)
+        if (levelCount >= 4)
         {
             Destroy(levelsInstantiated[0]);
 
@@ -189,6 +201,9 @@ public class PlayerController : MonoBehaviour
         transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
         if (isWithBoto == false)
             transform.position = new Vector3(transform.position.x, -0.75f, transform.position.z);
+        
+        animator.SetBool("shouldSlide", true);
+
 
         yield return new WaitForSeconds(slideTime);
 
@@ -198,6 +213,7 @@ public class PlayerController : MonoBehaviour
         if (isWithBoto == false)
             transform.position = new Vector3(transform.position.x, -0.25f, transform.position.z);
 
+        animator.SetBool("shouldSlide", false);
 
     }
 
@@ -211,14 +227,11 @@ public class PlayerController : MonoBehaviour
             transform.position = new Vector3(transform.position.x, jumpHeight, transform.position.z);
 
         }
-        /*
+        if (isWithJavali)
+            animator.SetBool("shouldJavaliJump", true);
         else
-        {
-            isSliding = false;
-            transform.position = new Vector3(transform.position.x, botoJump, transform.position.z);
-
-        }
-        */
+            animator.SetBool("shouldJump", true);
+        animator.speed = 0.5f;
 
         yield return new WaitForSeconds(jumpTime);
 
@@ -228,6 +241,10 @@ public class PlayerController : MonoBehaviour
             transform.position = new Vector3(transform.position.x, -0.25f, transform.position.z);
 
         }
+        animator.SetBool("shouldJavaliJump", false);
+        animator.SetBool("shouldJump", false);
+
+        animator.speed = 1f;
 
     }
 
@@ -256,40 +273,56 @@ public class PlayerController : MonoBehaviour
         isAttacking = false;
     }
 
-    IEnumerator Boitata()
+    public IEnumerator Boitata()
     {
         movement.moveSpeed = boitataSpeed;
         boitata.SetActive(true);
+        animator.SetBool("shouldBoitata", true);
 
         yield return new WaitForSeconds(boitataTimer);
 
         movement.moveSpeed = movement.maxSpeed / 2;
         boitata.SetActive(false);
+        animator.SetBool("shouldBoitata", false);
+
     }
 
-    IEnumerator Boto()
+    public IEnumerator Boto()
     {
         isWithBoto = true;
         movement.transform.position = new Vector3(movement.transform.position.x, -12f, movement.transform.position.z);
-        cameraPivot.transform.position = new Vector3(cameraPivot.transform.position.x, cameraPivot.transform.position.y -3f, cameraPivot.transform.position.z);
+        animator.SetBool("shouldBoto", true);
 
 
         yield return new WaitForSeconds(botoTimer);
 
         isWithBoto = false;
         movement.transform.position = new Vector3(movement.transform.position.x, 0f, movement.transform.position.z);
-        cameraPivot.transform.position = new Vector3(cameraPivot.transform.position.x, cameraPivot.transform.position.y, cameraPivot.transform.position.z);
+        animator.SetBool("shouldBoto", false);
 
 
     }
 
-    IEnumerator Javali()
+    public IEnumerator Javali()
     {
         float temp = jumpHeight;
         jumpHeight = javaliJumpHeight;
+        animator.SetBool("shouldJavali", true);
+        isWithJavali = true;
 
         yield return new WaitForSeconds(javaliTimer);
 
         jumpHeight = temp;
+        animator.SetBool("shouldJavali", false);
+        animator.SetBool("shouldJavaliJump", false);
+        isWithJavali = false;
+
+    }
+    
+
+    public void Die()
+    {
+        SceneManager.LoadScene(0);
+
     }
 }

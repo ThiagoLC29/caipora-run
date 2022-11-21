@@ -37,6 +37,7 @@ public class Enemy : MonoBehaviour
     public void Attack()
     {
         Debug.Log("Enemy attacked you!");
+        controller.Die();
     }
 
 }
