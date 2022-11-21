@@ -10,6 +10,7 @@ TagManager:
   - Boitata
   - Spawner
   - Collectable
+  - ObstacleSpawner
   layers:
   - Default
   - TransparentFX

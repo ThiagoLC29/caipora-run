@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     public float botoTimer;
     public float botoSpeed;
     public float botoJump;
+    public float botoSlide;
     public bool isWithBoto = false;
 
     public GameObject javali;
@@ -71,8 +72,6 @@ public class PlayerController : MonoBehaviour
 
         Swipe();
         WASD();
-        Slide();
-        Jump();
 
     }
 
@@ -127,9 +126,7 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(Attack());
 
-            //isJumping = true;
-            //Invoke("BaseState", jumpTime);
-            StartCoroutine(Jumppp());
+            StartCoroutine(Jump());
         }
 
         if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && transform.position.x > leftX && isPaused == false)
@@ -143,9 +140,11 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(Attack());
 
-            isSliding = true;
             Debug.Log("sliding");
-            Invoke("BaseState", slideTime);
+
+            if (isWithBoto == false)
+                StartCoroutine(Slide());
+
         }
 
         if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && transform.position.x < rightX && isPaused == false)
@@ -182,62 +181,53 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void BaseState()
+    IEnumerator Slide()
     {
+        isSliding = true;
+
         isJumping = false;
-        isSliding = false;
-        Debug.Log("stood up");
-
-    }
-
-    public void Slide()
-    {
-        if (isSliding)
-        {
-            isJumping = false;
-            transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
+        transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
+        if (isWithBoto == false)
             transform.position = new Vector3(transform.position.x, -0.75f, transform.position.z);
 
-        }
-        else if (isSliding == false /*&& isJumping == false*/)
-        {
-            transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
-            if (isWithBoto == false)
-                transform.position = new Vector3(transform.position.x, -0.25f, transform.position.z);
+        yield return new WaitForSeconds(slideTime);
 
-        }
+        isSliding = false;
+
+        transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+        if (isWithBoto == false)
+            transform.position = new Vector3(transform.position.x, -0.25f, transform.position.z);
+
+
     }
 
-    public void Jump()
+    IEnumerator Jump()
     {
-        if (isJumping && isWithBoto == false)
+        isJumping = true;
+
+        if (isWithBoto == false)
         {
             isSliding = false;
             transform.position = new Vector3(transform.position.x, jumpHeight, transform.position.z);
 
         }
-        else if (isSliding == false && isJumping == false && isWithBoto == false)
-        {
-            transform.position = new Vector3(transform.position.x, -0.25f, transform.position.z);
-
-        }
-        if (isJumping && isWithBoto)
+        /*
+        else
         {
             isSliding = false;
             transform.position = new Vector3(transform.position.x, botoJump, transform.position.z);
 
         }
-
-    }
-
-    IEnumerator Jumppp()
-    {
-        isJumping = true;
+        */
 
         yield return new WaitForSeconds(jumpTime);
 
         isJumping = false;
+        if (isSliding == false && isWithBoto == false)
+        {
+            transform.position = new Vector3(transform.position.x, -0.25f, transform.position.z);
 
+        }
 
     }
 

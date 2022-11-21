@@ -17,10 +17,6 @@ public class SpawnGround : MonoBehaviour
         playerMove = FindObjectOfType<PlayerMovement>();
         playerCon = FindObjectOfType<PlayerController>();
     }
-    void Update()
-    {
-
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -32,15 +28,6 @@ public class SpawnGround : MonoBehaviour
 
     private void Spawn()
     {
-        /*
-        //player.SpawnGround();
-        Debug.Log("triggered");
-        Destroy(gameObject);
-
-        Instantiate(groundPrefab);
-        groundPrefab.transform.position = spawnPoint.transform.position;
-        */
-
 
         GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag(spawnPointTag);
         foreach (GameObject spawnPoint in spawnPoints)

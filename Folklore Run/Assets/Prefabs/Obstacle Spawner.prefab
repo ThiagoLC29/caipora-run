@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2108218218520516853
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1906786244134639878}
+  - component: {fileID: 6252621254832783808}
+  m_Layer: 0
+  m_Name: Obstacle Spawner
+  m_TagString: ObstacleSpawner
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1906786244134639878
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2108218218520516853}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6252621254832783808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2108218218520516853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb091285a155d164986171393f2035aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPointTag: ObstacleSpawner
+  obstacleList:
+  - {fileID: 9070843653150411340, guid: 71ea4788b464dd04f9533b75493465e9, type: 3}
+  - {fileID: 3416587787942733561, guid: 4363513bce8928044a6952318b425eb6, type: 3}
+  - {fileID: 5565571050970300288, guid: 4caad02d5c77abb45b15769befc1405e, type: 3}
+  - {fileID: 2414554746394780824, guid: e2a9f0840ee7047408e3ef8404353175, type: 3}
+  - {fileID: 7593845594993297144, guid: 32b183e643e51e448a0b91d7ad7c2aab, type: 3}
+  - {fileID: 7471600679414036749, guid: f0e7391404ee5da4a847f1c23680829d, type: 3}
+  - {fileID: 8395000537194367060, guid: 56b1d4ac4b65fea4589829e4a84284e6, type: 3}
+  - {fileID: 7861723002952783926, guid: 464ea7886c365e94683b164753d5d869, type: 3}
+  - {fileID: 9167199924589951050, guid: c99cc8092b150ad4c9cfa022e6094b5e, type: 3}
+  - {fileID: 1150835626480022611, guid: 4473a82a22cb7cb4dadbf11211c228d9, type: 3}
+  - {fileID: 4824079236659227391, guid: 77c106e064c3b8e408f8ea806aa08750, type: 3}
+  - {fileID: 8761809095942463026, guid: 9e0d1291c4509394288873643ae03516, type: 3}
